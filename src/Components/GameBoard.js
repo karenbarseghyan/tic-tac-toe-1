@@ -22,45 +22,40 @@ font-weight: 700;
 padding: 10px;
 `;
 function GameBoard({...props}) {
- 
+  const [board, setBoard] = useState(
+    [
+      ["","",""],
+      ["","",""],
+      ["","",""]
+    ]
+  );
+  const clickHandler = (i,j) => {
+    const shallowBoard = [...board];
+    shallowBoard[i][j] = "X";
+    setBoard(shallowBoard);
+  }
+
+  const renderSquares = (row, i) => (
+    row.map((square, ind) => (
+      (<Square i ={i}
+            j = {ind}
+            key = {ind}
+            char = {square}
+            clickHandler = {clickHandler}
+            />)
+    ))
+  );
+
+  const renderRows = board.map ((row, ind ) => <BoardRow key = {ind}> {renderSquares(row, ind)} </BoardRow>)
+
   return (
     <>
       <HDependant>Player Turn : X</HDependant>
       <GameBoardWrapper >
-        <BoardRow>
-          <Square/>
-          <Square/>
-          <Square/>
-        </BoardRow>
-        <BoardRow>
-          <Square/>
-          <Square/>
-          <Square/>
-        </BoardRow>
-        <BoardRow>
-          <Square/>
-          <Square/>
-          <Square/>
-        </BoardRow>
+        {renderRows}
       </GameBoardWrapper>
     </>
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
   );
 }
 
-export default GameBoard;
+export default GameBoard; 
