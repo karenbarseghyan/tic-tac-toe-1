@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import Square from "./Square";
 
@@ -21,7 +21,7 @@ font-size: 6vh;
 font-weight: 700;
 padding: 10px;
 `;
-function GameBoard({...props}) {
+function GameBoard({gameCount, ...props}) {
   const [board, setBoard] = useState(
     [
       ["","",""],
@@ -31,6 +31,16 @@ function GameBoard({...props}) {
   );
 
   const [turn, setTurn] = useState("X");
+  useEffect(()=>{
+    setBoard (
+      [
+       ["","",""],
+       ["","",""],
+       ["","",""]
+      ]
+    );
+    setTurn("X");
+  }, [gameCount])
 
   const clickHandler = (i,j) => {
     console.log(i,j);
