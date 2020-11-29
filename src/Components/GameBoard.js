@@ -29,10 +29,18 @@ function GameBoard({...props}) {
       ["","",""]
     ]
   );
+
+  const [turn, setTurn] = useState("X");
+
   const clickHandler = (i,j) => {
-    const shallowBoard = [...board];
-    shallowBoard[i][j] = "X";
+    console.log(i,j);
+    const shallowBoard = board.map (row => [...row]);
+    shallowBoard[i][j] = turn;
+    setTurn(turn === "X" ? "O" : "X");
     setBoard(shallowBoard);
+    // const shallowBoard = [...board];
+    // shallowBoard[i][j] = "X";
+    // setBoard(shallowBoard);
   }
 
   const renderSquares = (row, i) => (
@@ -50,7 +58,7 @@ function GameBoard({...props}) {
 
   return (
     <>
-      <HDependant>Player Turn : X</HDependant>
+      <HDependant>Player Turn : {turn}</HDependant>
       <GameBoardWrapper >
         {renderRows}
       </GameBoardWrapper>
