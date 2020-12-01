@@ -46,11 +46,35 @@ function GameBoard({gameCount, ...props}) {
     console.log(i,j);
     const shallowBoard = board.map (row => [...row]);
     shallowBoard[i][j] = turn;
+
+   console.log(isGameWon(shallowBoard, i, j)) ;
     setTurn(turn === "X" ? "O" : "X");
     setBoard(shallowBoard);
     // const shallowBoard = [...board];
     // shallowBoard[i][j] = "X";
     // setBoard(shallowBoard);
+  }
+
+  const isGameWon = (shallowBoard, i, j) => {
+    return (checkHorizontal(shallowBoard[i]) || checkVertical(shallowBoard, j));
+  }
+
+  const checkHorizontal = (row) => {
+   for (let i = 0; i < row.length; i++) {
+     if(row[i] !== turn) {
+       return false;
+     }
+   }
+   return true; 
+  }
+
+  const checkVertical = (shallowBoard, j) => {
+    for (let i = 0; i < shallowBoard.length; i++) {
+      if(shallowBoard[i][j] !== turn) {
+        return false;
+      }
+    }
+    return true;
   }
 
   const renderSquares = (row, i) => (
