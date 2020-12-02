@@ -3,6 +3,7 @@ import styled from "styled-components";
 import Square from "./Square";
 
 const GameBoardWrapper = styled.div`
+  position: relative;
   display: flex;
   flex-direction: column;
   height: 60vh;
@@ -21,6 +22,15 @@ font-size: 6vh;
 font-weight: 700;
 padding: 10px;
 `;
+
+const Overlay = styled.div`
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-color: white;
+  opacity: 0.3;
+`;
+
 function GameBoard({gameCount, ...props}) {
   const [board, setBoard] = useState(
     [
@@ -31,6 +41,8 @@ function GameBoard({gameCount, ...props}) {
   );
 
   const [turn, setTurn] = useState("X");
+  const [won, setWon] = useState(false);
+
   useEffect(()=>{
     setBoard (
       [
@@ -40,23 +52,29 @@ function GameBoard({gameCount, ...props}) {
       ]
     );
     setTurn("X");
-  }, [gameCount])
+    setWon(false);
+  }, [gameCount]);
 
   const clickHandler = (i,j) => {
     console.log(i,j);
     const shallowBoard = board.map (row => [...row]);
     shallowBoard[i][j] = turn;
 
-   console.log(isGameWon(shallowBoard, i, j)) ;
-    setTurn(turn === "X" ? "O" : "X");
     setBoard(shallowBoard);
+    isGameWon(shallowBoard, i, j) ? setWon(true) : setTurn(turn === "X" ? "O" : "X");
+    
     // const shallowBoard = [...board];
     // shallowBoard[i][j] = "X";
     // setBoard(shallowBoard);
-  }
+  };
 
   const isGameWon = (shallowBoard, i, j) => {
-    return (checkHorizontal(shallowBoard[i]) || checkVertical(shallowBoard, j));
+    return (
+      checkHorizontal(shallowBoard[i]) || 
+      checkVertical(shallowBoard, j) ||
+      checkTopLeftToRight(shallowBoard) ||
+      checkBotLeftToRight(shallowBoard)
+      );
   }
 
   const checkHorizontal = (row) => {
@@ -66,7 +84,7 @@ function GameBoard({gameCount, ...props}) {
      }
    }
    return true; 
-  }
+  };
 
   const checkVertical = (shallowBoard, j) => {
     for (let i = 0; i < shallowBoard.length; i++) {
@@ -75,7 +93,25 @@ function GameBoard({gameCount, ...props}) {
       }
     }
     return true;
-  }
+  };
+
+  const checkTopLeftToRight  = (shallowBoard) => {
+    for (let i = 0; i < shallowBoard.length; i++) {
+      if(shallowBoard[i][i] !== turn) {
+        return false;
+      }
+    }
+    return true;
+  };
+  
+  const checkBotLeftToRight  = (shallowBoard) => {
+    for (let i = shallowBoard.length - 1; i >= 0; i--) {
+      if(shallowBoard[i][shallowBoard.length - i - 1] !== turn) {
+        return false;
+      }
+    }
+    return true;
+  };
 
   const renderSquares = (row, i) => (
     row.map((square, ind) => (
@@ -92,8 +128,15 @@ function GameBoard({gameCount, ...props}) {
 
   return (
     <>
-      <HDependant>Player Turn : {turn}</HDependant>
+      {
+        won ? 
+        <HDependant>Player {turn} Wins</HDependant>
+        :
+        <HDependant>Player Turn : {turn}</HDependant>
+      }
+      
       <GameBoardWrapper >
+        {won && <Overlay />}
         {renderRows}
       </GameBoardWrapper>
     </>
