@@ -130,7 +130,9 @@ function GameBoard({gameCount, ...props}) {
     <>
       {
         won ? 
-        <HDependant>Player {turn} Wins</HDependant>
+        <HDependant  style = {{backgroundColor: 'red', width: '50%', textAlign: 'center'}}>
+          Congratulations Player "{turn}" Wins
+        </HDependant>
         :
         <HDependant>Player Turn : {turn}</HDependant>
       }
